@@ -1,0 +1,7 @@
+{
+    "host": "localhost",
+    "user": "root",
+    "password": "123457",
+    "database": "protein",
+    "port": 3306
+}

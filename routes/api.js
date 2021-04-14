@@ -1,5 +1,6 @@
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
+let proteinController = require('../controllers/proteinController');
 
 /*  DEVELOP ONLY */
 router.get('/all', function(req, res, next) {
@@ -9,5 +10,8 @@ router.get('/all', function(req, res, next) {
   };
   res.send(ans);
 });
+
+router.get("/proteins/all", proteinController.getProteinsAll);
+router.get("/proteins/type-value", proteinController.getProteinsByKeyValue);
 
 module.exports = router;
