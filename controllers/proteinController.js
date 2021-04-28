@@ -1,5 +1,7 @@
 let mysql = require("../repositories/protein").Mysql();
-module.exports.getProteinsAll = function (req, res, next) {
+let Parser = require("json2csv").Parser;
+let json2csvParser = new Parser();
+exports.getProteinsAll = function (req, res, next) {
     mysql.form("ptmis_table").where("num_id", "0", ">=").select(function (err, data) {
         if (err) {
             res.status(500).send({
@@ -18,7 +20,7 @@ module.exports.getProteinsAll = function (req, res, next) {
         return;
     });
 };
-module.exports.getProteinsByKeyValue = function (req, res, next) {
+exports.getProteinsByKeyValue = function (req, res, next) {
     if (
         typeof req.query.type == "undefined" ||
         typeof req.query.value == "undefined"
@@ -54,7 +56,7 @@ module.exports.getProteinsByKeyValue = function (req, res, next) {
             });
     }
 };
-module.exports.getProteins = function (req, res, next) {
+exports.getProteins = function (req, res, next) {
     if (
         typeof req.body.perPage == "undefined" ||
         typeof req.body.page == "undefined"
@@ -81,6 +83,7 @@ module.exports.getProteins = function (req, res, next) {
                 sql = sql.where(prop, val, op, rel);
             }
         }
+        
         //按页返回信息
         sql.limit(req.body.perPage * req.body.page + req.body.perPage)
             .orderBy("num_id")
@@ -127,3 +130,22 @@ module.exports.getProteins = function (req, res, next) {
             });
     }
 };
+exports.getProteinsFile = function(req, res, next) {
+    mysql.form("ptmis_table").where("num_id", "0", ">=").select(function (err, data) {
+        if (err || typeof data == "undefined") {
+            res.status(500).send({
+                error: true,
+                message: "服务器内部错误",
+            });
+            return;
+        }
+        let csv = json2csvParser.parse(data);
+        res.set({
+            'Content-Type': 'application/octet-stream; charset=utf-8',
+            'Content-Disposition': 'attachment; filename=' + 'proteins'+'.csv',
+            'Content-Length': csv.length
+          });
+        res.send(csv);
+        return;
+    });
+}
