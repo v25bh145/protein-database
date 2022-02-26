@@ -2,6 +2,6 @@
     "host": "localhost",
     "user": "root",
     "password": "123457",
-    "database": "protein",
+    "database": "bilibili",
     "port": 3306
 }

@@ -4,8 +4,7 @@ let path = require("path");
 let cookieParser = require("cookie-parser");
 let logger = require("morgan");
 
-let userRouter = require("./routes/userRouter");
-let adminRouter = require("./routes/adminRouter");
+let bilibiliRouter = require("./routes/bilibiliRouter");
 
 let app = express();
 
@@ -17,11 +16,10 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-require("./repositories/protein").init();
+require("./repositories/bilibiliDB").init();
 
 //路由
-app.use("/api", userRouter);
-app.use("/api/admin", adminRouter);
+app.use("/api", bilibiliRouter);
 
 // 404
 app.use(function (req, res, next) {
